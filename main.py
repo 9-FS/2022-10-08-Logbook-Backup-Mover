@@ -36,38 +36,38 @@ def main():
         try:
             backups=dropbox_list_files(dbx, BACKUPS_PATH)   #download content list of backup folder
         except dropbox.exceptions.ApiError:                 #if folder does not exist: do nothing
-            KFSlog.write(f"\"{BACKUPS_PATH}\" does not exist. Not doing anything...")
+            KFSlog.write(f"\"Dropbox/{BACKUPS_PATH}\" does not exist. Not doing anything...")
             continue
 
         if len(backups)==0: #if backups folder is empty: delete
-            KFSlog.write(f"\"{BACKUPS_PATH}\" is empty. Deleting folder...")
+            KFSlog.write(f"\"Dropbox/{BACKUPS_PATH}\" is empty. Deleting folder...")
             try:
                 dbx.files_delete_v2(BACKUPS_PATH[:-1])  #remove trailing slash from path otherwise won't work
             except dropbox.exceptions.ApiError:
-                KFSlog.write(f"Deleting folder \"{BACKUPS_PATH}\" failed. Not doing anything...")
+                KFSlog.write(f"Deleting folder \"Dropbox/{BACKUPS_PATH}\" failed. Not doing anything...")
                 continue
-            KFSlog.write(f"\r\"{BACKUPS_PATH}\" is empty. Deleted folder.")
+            KFSlog.write(f"\r\"Dropbox/{BACKUPS_PATH}\" is empty. Deleted folder.")
             dropbox_if_empty_delete_folder(dbx, BACKUPS_PATH_PARENT)
             continue
         else:
-            KFSlog.write(f"\"{BACKUPS_PATH}\" has contents. Preparing movement.")
+            KFSlog.write(f"\"Dropbox/{BACKUPS_PATH}\" has contents. Preparing movement.")
 
-        KFSlog.write(f"Deleting existing backup file from today in \"{DEST_PATH}\"...") #make room for new backup file first, move can't overwrite
+        KFSlog.write(f"Deleting existing backup file from today in \"Dropbox/{DEST_PATH}\"...") #make room for new backup file first, move can't overwrite
         try:
             dbx.files_delete_v2(f"{DEST_PATH}{dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%d')} Logbook.csv")
         except dropbox.exceptions.ApiError:
-            KFSlog.write(f"Backup file from today does not exist yet in \"{DEST_PATH}\".")
+            KFSlog.write(f"Backup file from today does not exist yet in \"Dropbox/{DEST_PATH}\".")
         else:
-            KFSlog.write(f"\rDeleted existing backup file from today in \"{DEST_PATH}\".")
+            KFSlog.write(f"\rDeleted existing backup file from today in \"Dropbox/{DEST_PATH}\".")
 
 
-        KFSlog.write(f"Moving latest backup file \"{backups[-1]}\" from \"{BACKUPS_PATH}\" to \"{DEST_PATH}\"...")
+        KFSlog.write(f"Moving latest backup file \"{backups[-1]}\" from \"Dropbox/{BACKUPS_PATH}\" to \"Dropbox/{DEST_PATH}\"...")
         try:
             dbx.files_move_v2(f"{BACKUPS_PATH}{backups[-1]}", f"{DEST_PATH}{dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%d')} Logbook.csv")
         except dropbox.exceptions.ApiError:
-            KFSlog.write(f"Moving latest backup file \"{backups[-1]}\" from \"{BACKUPS_PATH}\" to \"{DEST_PATH}\" failed. Not doing anything...")
+            KFSlog.write(f"Moving latest backup file \"{backups[-1]}\" from \"Dropbox/{BACKUPS_PATH}\" to \"Dropbox/{DEST_PATH}\" failed. Not doing anything...")
             continue
-        KFSlog.write(f"\rMoved latest backup file \"{backups[-1]}\" from \"{BACKUPS_PATH}\" to \"{DEST_PATH}\".")
+        KFSlog.write(f"\rMoved latest backup file \"{backups[-1]}\" from \"Dropbox/{BACKUPS_PATH}\" to \"Dropbox/{DEST_PATH}\".")
 
 
         try:
