@@ -1,7 +1,7 @@
 import dropbox
 
 
-def dropbox_list_files(dbx, path: str) -> list[str]:
+def dropbox_list_files(dbx, path: str) -> list: #list[str] doesnt work on server
     file_names=[]   #file names to return
 
 
