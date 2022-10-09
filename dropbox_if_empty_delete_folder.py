@@ -7,19 +7,19 @@ def dropbox_if_empty_delete_folder(dbx, path: str) -> None:
     try:
         backups=dropbox_list_files(dbx, path)
     except dropbox.exceptions.ApiError: #if folder does not exist: do nothing
-        KFSlog.write(f"\"Dropbox/{path}\" does not exist. Not doing anything...")
+        KFSlog.write(f"\"Dropbox{path}\" does not exist. Not doing anything...")
         raise
 
     if 0<len(backups):  #if backups folder still has contents now: do nothing
-        KFSlog.write(f"\"Dropbox/{path}\" is not empty. Not doing anything...")
+        KFSlog.write(f"\"Dropbox{path}\" is not empty. Not doing anything...")
         raise dropbox.exceptions.ApiError()
     
-    KFSlog.write(f"\"Dropbox/{path}\" is empty. Deleting folder...")    #if backups path is empty now: delete
+    KFSlog.write(f"\"Dropbox{path}\" is empty. Deleting folder...")    #if backups path is empty now: delete
     try:
         dbx.files_delete_v2(path[:-1])  #remove trailing slash from path otherwise won't work
     except dropbox.exceptions.ApiError:
-        KFSlog.write(f"Deleting folder \"Dropbox/{path}\" failed. Not doing anything...")
+        KFSlog.write(f"Deleting folder \"Dropbox{path}\" failed. Not doing anything...")
         raise
-    KFSlog.write(f"\r\"Dropbox/{path}\" is empty. Deleted folder.")
+    KFSlog.write(f"\r\"Dropbox{path}\" is empty. Deleted folder.")
 
     return
