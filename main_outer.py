@@ -7,6 +7,6 @@ try:
     main()
 except:
     KFSlog.write(f"CRASH\n{traceback.format_exc()}")
-    
+
     print("\n\nPress enter to close program.")
     input() #pause
