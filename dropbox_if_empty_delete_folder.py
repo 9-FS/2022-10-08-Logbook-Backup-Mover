@@ -3,7 +3,7 @@ from dropbox_list_files import dropbox_list_files
 from KFS import KFSlog
 
 
-def dropbox_if_empty_delete_folder(dbx, path: str):
+def dropbox_if_empty_delete_folder(dbx, path: str) -> None:
     try:
         backups=dropbox_list_files(dbx, path)
     except dropbox.exceptions.ApiError: #if folder does not exist: do nothing
