@@ -3,15 +3,13 @@ import dropbox
 import dropbox.exceptions
 import time
 from KFS import KFSlog
-from dropbox_if_empty_delete_folder import dropbox_if_empty_delete_folder
 from dropbox_list_files import dropbox_list_files
 
 
 @KFSlog.timeit
 def main():
     backups=None                                    #backup file names
-    BACKUPS_PATH="/Apps/Logbook.aero/"              #path to backup files
-    BACKUPS_PATH_PARENT="/Apps/"
+    BACKUPS_PATH="/Apps/Logbook.aero/"              #path to backup files, can't delete folder afterwards because link to Logbook.aero gets destroyed
     dbx=None                                        #Dropbox instance
     DEST_PATH="/Dokumente/Luftfahrt/Logbook/"       #destination path for backup files
     DROPBOX_API_TOKEN=""                            #Dropbox API access token
@@ -40,14 +38,7 @@ def main():
             continue
 
         if len(backups)==0: #if backups folder is empty: delete
-            KFSlog.write(f"\"Dropbox{BACKUPS_PATH}\" is empty. Deleting folder...")
-            try:
-                dbx.files_delete_v2(BACKUPS_PATH[:-1])  #remove trailing slash from path otherwise won't work
-            except dropbox.exceptions.ApiError:
-                KFSlog.write(f"Deleting folder \"Dropbox{BACKUPS_PATH}\" failed. Not doing anything...")
-                continue
-            KFSlog.write(f"\r\"Dropbox{BACKUPS_PATH}\" is empty. Deleted folder.")
-            dropbox_if_empty_delete_folder(dbx, BACKUPS_PATH_PARENT)
+            KFSlog.write(f"\"Dropbox{BACKUPS_PATH}\" is empty. Not doing anything...")
             continue
         else:
             KFSlog.write(f"\"Dropbox{BACKUPS_PATH}\" has contents. Preparing movement.")
@@ -55,7 +46,7 @@ def main():
         KFSlog.write(f"Deleting existing backup file from today in \"Dropbox{DEST_PATH}\"...") #make room for new backup file first, move can't overwrite
         try:
             dbx.files_delete_v2(f"{DEST_PATH}{dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%d')} Logbook.csv")
-        except dropbox.exceptions.ApiError:
+        except dropbox.exceptions.ApiError: #TODO What if file exists and deleting failed because of permission error or something?
             KFSlog.write(f"Backup file from today does not exist yet in \"Dropbox{DEST_PATH}\".")
         else:
             KFSlog.write(f"\rDeleted existing backup file from today in \"Dropbox{DEST_PATH}\".")
@@ -68,10 +59,3 @@ def main():
             KFSlog.write(f"Moving latest backup file \"{backups[-1]}\" from \"Dropbox{BACKUPS_PATH}\" to \"Dropbox{DEST_PATH}\" failed. Not doing anything...")
             continue
         KFSlog.write(f"\rMoved latest backup file \"{backups[-1]}\" from \"Dropbox{BACKUPS_PATH}\" to \"Dropbox{DEST_PATH}\".")
-
-
-        try:
-            dropbox_if_empty_delete_folder(dbx, BACKUPS_PATH)
-            dropbox_if_empty_delete_folder(dbx, BACKUPS_PATH_PARENT)
-        except dropbox.exceptions.ApiError:
-            continue
