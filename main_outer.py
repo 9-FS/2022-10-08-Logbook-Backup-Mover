@@ -1,12 +1,12 @@
 import traceback    #Exceptionnachricht vollständig wenn Programm als .exe abschmiert
-from KFS import KFSlog
+import KFS.log
 from main import main
 
 
 try:
     main()
 except:
-    KFSlog.write(f"CRASH\n{traceback.format_exc()}")
+    KFS.log.write(traceback.format_exc())
 
     print("\n\nPress enter to close program.")
     input() #pause
