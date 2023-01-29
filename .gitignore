@@ -1,0 +1,7 @@
+*.bat
+*.exe
+*.pyc
+dropbox_API_token.txt
+test.py
+/Log/
+/Logbook Backup Mover Venv/
