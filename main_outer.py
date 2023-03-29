@@ -4,7 +4,7 @@ import traceback    #exception message full when program crashes as .exe
 from main import main
 
 
-logger=KFS.log.setup_logging(__name__, logging.INFO)
+logger=KFS.log.setup_logging(__name__, logging.INFO)    #named logger because dropbox injects global logger with own undesired logging messages
 try:
     main(logger)
 except:
