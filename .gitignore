@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.token
+dropbox_API.json
 test.py
 /__pycache__/
 /Log/

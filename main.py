@@ -1,6 +1,7 @@
 import datetime as dt
 import dropbox
 import dropbox.exceptions
+import json
 import KFS
 import logging
 import os
@@ -13,7 +14,7 @@ def main(logger: logging.Logger) -> None:
     dest_dir_filenames: list[str]                   #filenames in destination directory
     dest_filepath: str                              #destination filepath
     DEST_PATH="/Dokumente/Luftfahrt/Logbook/"       #destination path for backup files
-    DROPBOX_API_TOKEN: str                          #Dropbox API access token
+    DROPBOX_API_CRED: dict[str, str]                #Dropbox API access credentials
     exec_next_DT=dt.datetime.now(dt.timezone.utc)   #next execution
     refresh_rate: float
     source_dir_filenames: list[str]                 #filenames in source directory
@@ -21,12 +22,12 @@ def main(logger: logging.Logger) -> None:
     SOURCE_PATH="/Apps/Logbook.aero/"               #path to backup files, can't delete folder afterwards because link to Logbook.aero gets destroyed
 
 
-    if logger.level<=logging.DEBUG: #if debug mode: refresh with 100mHz (every 10s)
-        refresh_rate=1/10
-    else:
-        refresh_rate=1/100  #if normal mode: refresh with 10mHz (every 100s)
-    DROPBOX_API_TOKEN=KFS.config.load_config("dropbox_API.token")   #load API token
-    dbx=dropbox.Dropbox(DROPBOX_API_TOKEN)                          #create Dropbox instance
+    if logger.level<=logging.DEBUG: #if debug mode:
+        refresh_rate=1/10           #refresh with 100mHz (every 10s)
+    else:                           #if normal mode:
+        refresh_rate=1/100          #refresh with 10mHz (every 100s)
+    DROPBOX_API_CRED=json.loads(KFS.config.load_config("dropbox_API.json")) #load API credentials
+    dbx=dropbox.Dropbox(oauth2_refresh_token=DROPBOX_API_CRED["refresh_token"], app_key=DROPBOX_API_CRED["app_key"], app_secret=DROPBOX_API_CRED["app_secret"])  #create Dropbox instance
     
 
     while True:
