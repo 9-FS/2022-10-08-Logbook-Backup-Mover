@@ -1,3 +1,4 @@
+#Copyright (c) 2023 구FS, all rights reserved. Subject to the MIT licence in `licence.md`.
 import KFS.log      #setup logging
 import logging      #standard logging
 import traceback    #exception message full when program crashes as .exe
