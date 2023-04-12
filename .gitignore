@@ -3,6 +3,6 @@
 *.log
 *.pyc
 *.token
-/Log/
+/log/
 /src/test.py
 dropbox_API.json
