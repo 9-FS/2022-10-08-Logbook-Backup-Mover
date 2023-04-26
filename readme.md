@@ -2,7 +2,7 @@
 Topic: "Logbook Backup Mover"
 Author: "구FS"
 ---
-<link href="./src/KFS/md_style.css" rel="stylesheet"></link>
+<link href="./doc_templates/md_style.css" rel="stylesheet"></link>
 <body>
 
 # <p style="text-align: center">Logbook Backup Mover</p>
