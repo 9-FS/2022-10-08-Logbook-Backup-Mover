@@ -11,24 +11,32 @@ import time
 
 @KFS.log.timeit
 def main(logger: logging.Logger) -> None:
-    dbx: dropbox.Dropbox                            #Dropbox instance
-    dest_dir_filenames: list[str]                   #filenames in destination directory
-    dest_filepath: str                              #destination filepath
-    DEST_PATH="/Dokumente/Luftfahrt/Logbook/"       #destination path for backup files
-    DROPBOX_API_CRED: dict[str, str]                #Dropbox API access credentials
-    exec_next_DT=dt.datetime.now(dt.timezone.utc)   #next execution
-    refresh_rate: float
-    source_dir_filenames: list[str]                 #filenames in source directory
-    source_filepath: str                            #source filepath
-    SOURCE_PATH="/Apps/Logbook.aero/"               #path to backup files, can't delete folder afterwards because link to Logbook.aero gets destroyed
+    dbx: dropbox.Dropbox                                        #dropbox instance
+    dest_dir_filenames: list[str]                               #filenames in destination directory
+    dest_filepath: str                                          #destination filepath
+    DEST_PATH="/Documents/Aviation/Logbook/"                    #destination path for backup files
+    DROPBOX_API_CRED: dict[str, str]                            #dropbox API access credentials
+    DROPBOX_CONFIG_CONTENT_DEFAULT: dict[str, str]={            #dropbox configuration default content
+        "app_key": "",
+        "app_secret": "",
+        "refresh_token": "",
+    }
+    exec_next_DT: dt.datetime=dt.datetime.now(dt.timezone.utc)  #next execution
+    refresh_rate: float                                         #how often to refresh
+    source_dir_filenames: list[str]                             #filenames in source directory
+    source_filepath: str                                        #source filepath
+    SOURCE_PATH="/Apps/Logbook.aero/"                           #path to backup files, can't delete folder afterwards because link to Logbook.aero gets destroyed
 
 
     if logger.level<=logging.DEBUG: #if debug mode:
         refresh_rate=1/10           #refresh with 100mHz (every 10s)
     else:                           #if normal mode:
         refresh_rate=1/100          #refresh with 10mHz (every 100s)
-    DROPBOX_API_CRED=json.loads(KFS.config.load_config("dropbox_API.json")) #load API credentials
-    dbx=dropbox.Dropbox(oauth2_refresh_token=DROPBOX_API_CRED["refresh_token"], app_key=DROPBOX_API_CRED["app_key"], app_secret=DROPBOX_API_CRED["app_secret"])  #create Dropbox instance
+    try:
+        DROPBOX_API_CRED=json.loads(KFS.config.load_config("dropbox_API.json", json.dumps(DROPBOX_CONFIG_CONTENT_DEFAULT, indent=4)))                           #load API credentials
+    except FileNotFoundError:
+        return
+    dbx=dropbox.Dropbox(oauth2_refresh_token=DROPBOX_API_CRED["refresh_token"], app_key=DROPBOX_API_CRED["app_key"], app_secret=DROPBOX_API_CRED["app_secret"]) #create Dropbox instance
     
 
     while True:
