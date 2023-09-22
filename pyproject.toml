@@ -2,7 +2,7 @@
 authors     = ["9FS <pray4spam@googlemail.com>"]
 description = ""
 license     = "MIT"
-name        = "Logbook Backup Mover"
+name        = "x"                                                       # can't leave empty because of bug with `poetry install` from poetry.lock file
 readme      = "readme.md"
 repository  = "https://github.com/9-FS/2022-10-08-Logbook-Backup-Mover"
 version     = "1.0.2"
