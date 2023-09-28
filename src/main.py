@@ -18,8 +18,8 @@ def main(logger: logging.Logger) -> None:
     dest_dir_filenames: list[str]                               # filenames in destination directory
     dest_filepath: str                                          # destination filepath
     DEST_PATH="/Documents/Aviation/Logbook/"                    # destination path for backup files
-    DROPBOX_API_CRED: dict[str, str]                            # dropbox API access credentials
-    DROPBOX_CONFIG_CONTENT_DEFAULT: dict[str, str]={            # dropbox configuration default content
+    dropbox_API_cred: dict[str, str]                            # dropbox API access credentials
+    DROPBOX_API_CRED_DEFAULT: dict[str, str]={                   # dropbox configuration default content
         "app_key": "",
         "app_secret": "",
         "refresh_token": "",
@@ -36,10 +36,10 @@ def main(logger: logging.Logger) -> None:
     else:                                                                                                                                                       # if normal mode:
         refresh_rate=1/100                                                                                                                                      # refresh with 10mHz (every 100s)
     try:
-        DROPBOX_API_CRED=json.loads(KFSconfig.load_config("dropbox_API.json", json.dumps(DROPBOX_CONFIG_CONTENT_DEFAULT, indent=4)))                            # load API credentials
+        dropbox_API_cred=json.loads(KFSconfig.load_config("dropbox_API_cred.json", json.dumps(DROPBOX_API_CRED_DEFAULT, indent=4)))                             # load API credentials
     except FileNotFoundError:
         return
-    dbx=dropbox.Dropbox(oauth2_refresh_token=DROPBOX_API_CRED["refresh_token"], app_key=DROPBOX_API_CRED["app_key"], app_secret=DROPBOX_API_CRED["app_secret"]) # create Dropbox instance
+    dbx=dropbox.Dropbox(oauth2_refresh_token=dropbox_API_cred["refresh_token"], app_key=dropbox_API_cred["app_key"], app_secret=dropbox_API_cred["app_secret"]) # create Dropbox instance
     
 
     while True:
