@@ -8,5 +8,6 @@
 doc_templates/
 log/
 
-dropbox_API_cred.json
+config/dropbox_API_cred.json
+Dockerfile
 tests/test.py
