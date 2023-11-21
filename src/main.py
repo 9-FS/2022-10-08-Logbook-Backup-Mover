@@ -13,7 +13,7 @@ import time
 
 
 @KFSlog.timeit
-def main(logger: logging.Logger) -> None:
+def main(DEBUG: bool, logger: logging.Logger) -> None:
     dbx: dropbox.Dropbox                                        # dropbox instance
     dest_dir_filenames: list[str]                               # filenames in destination directory
     dest_filepath: str                                          # destination filepath
