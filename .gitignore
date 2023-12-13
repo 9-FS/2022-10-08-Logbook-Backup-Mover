@@ -5,9 +5,9 @@
 
 .hypothesis/
 .pytest_cache/
+config/
 doc_templates/
 log/
 
-config/dropbox_API_cred.json
 Dockerfile
 tests/test.py
